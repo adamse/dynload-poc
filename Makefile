@@ -8,8 +8,8 @@ obj.so: obj.c iface.h
 	gcc $(FLAGS) -c -fpic obj.c
 	gcc $(FLAGS) -shared -o obj.so obj.o
 
-main: main.c iface.h
-	gcc $(FLAGS) main.c -o main -ldl -export-dynamic
+main: main.c iface.h dynamic_exports.txt
+	gcc $(FLAGS) main.c -o main -ldl -Wl,--dynamic-list=dynamic_exports.txt
 
 .PHONY: clean
 clean:
