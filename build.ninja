@@ -1,0 +1,23 @@
+cc = gcc
+cflags = -Wall -Werror
+linkflags = 
+
+rule cc
+  description = CC $out
+  depfile = $out.d
+  command = $cc $cflags -MD -MF $out.d -c $in -o $out
+
+rule cc-link
+  description = CC-LINK $out
+  command = $cc $cflags $in -o $out $linkflags
+
+build obj.o: cc obj.c
+  cflags = $cflags -fpic
+
+build obj.so: cc-link obj.o
+  linkflags = -shared
+
+build main.o: cc main.c
+
+build main: cc-link main.o | dynamic_exports.txt
+  linkflags = -ldl -Wl,--dynamic-list=dynamic_exports.txt
